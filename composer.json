@@ -1,6 +1,11 @@
 {
     "name": "isometriks/json-ld-dumper-bundle",
     "description": "Symfony Integration for IsometriksJsonLdDumper",
+    "autoload": {
+        "psr-4": {
+            "Isometriks\\Bundle\\JsonLdDumperBundle\\": ""
+        }
+    },
     "authors": [
         {
             "name": "Craig Blanchette",
