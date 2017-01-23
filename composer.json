@@ -1,0 +1,14 @@
+{
+    "name": "isometriks/json-ld-dumper-bundle",
+    "description": "Symfony Integration for IsometriksJsonLdDumper",
+    "authors": [
+        {
+            "name": "Craig Blanchette",
+            "email": "craig.blanchette@gmail.com"
+        }
+    ],
+    "prefer-stable":        true,
+    "require": {
+        "isometriks/json-ld-dumper":    "@stable"
+    }
+}

@@ -1,0 +1,70 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="isometriks_json_ld_dumper.mapping_configuration" class="Isometriks\JsonLdDumper\MappingConfiguration">
+            <argument>%isometriks_json_ld_dumper.mappings.static%</argument>
+            <argument>%isometriks_json_ld_dumper.mappings.entity%</argument>
+        </service>
+
+        <!-- Registry -->
+        <service id="isometriks_json_ld_dumper.registry" class="Isometriks\Bundle\JsonLdDumperBundle\Registry">
+            <argument type="collection" />
+        </service>
+
+        <service id="isometriks_json_ld_dumper.parser" class="Isometriks\JsonLdDumper\Parser">
+            <argument type="service" id="isometriks_json_ld_dumper.mapping_configuration" />
+
+            <!-- Compiler pass sets replacers -->
+            <argument type="collection" />
+        </service>
+
+        <service id="isometriks_json_ld_dumper.dumper" class="Isometriks\JsonLdDumper\Dumper">
+            <argument type="service" id="isometriks_json_ld_dumper.parser" />
+        </service>
+
+        <!-- Expression Language -->
+        <service id="isometriks_json_ld_dumper.expression_language" class="Symfony\Component\DependencyInjection\ExpressionLanguage">
+            <call method="registerProvider">
+                <argument type="service" id="isometriks_json_ld_dumper.expression_langauge.request" />
+            </call>
+        </service>
+
+        <service id="isometriks_json_ld_dumper.expression_langauge.request" class="Isometriks\Bundle\JsonLdDumperBundle\ExpressionLanguage\RequestProvider">
+            <argument type="service" id="request_stack" />
+        </service>
+
+        <!-- Replacers -->
+        <service id="isometriks_json_ld_dumper.replacer.static" class="Isometriks\JsonLdDumper\Replacer\StaticReplacer">
+            <argument type="service" id="isometriks_json_ld_dumper.mapping_configuration" />
+
+            <tag name="isometriks_json_ld_dumper.replacer" />
+        </service>
+
+        <service id="isometriks_json_ld_dumper.replacer.resource" class="Isometriks\JsonLdDumper\Replacer\ResourceReplacer">
+            <tag name="isometriks_json_ld_dumper.replacer" />
+        </service>
+
+        <service id="isometriks_json_ld_dumper.replacer.date" class="Isometriks\JsonLdDumper\Replacer\DateReplacer">
+            <tag name="isometriks_json_ld_dumper.replacer" />
+        </service>
+
+        <service id="isometriks_json_ld_dumper.replacer.expression" class="Isometriks\Bundle\JsonLdDumperBundle\Replacer\ExpressionReplacer">
+            <argument type="service" id="service_container" />
+            <argument type="service" id="isometriks_json_ld_dumper.expression_language" />
+
+            <tag name="isometriks_json_ld_dumper.replacer" />
+        </service>
+
+        <!-- Twig Extension -->
+        <service id="isometriks_json_ld_dumper.twig.extension" class="Isometriks\Bundle\JsonLdDumperBundle\Twig\JsonLdDumperExtension">
+            <argument type="service" id="isometriks_json_ld_dumper.dumper" />
+            <argument type="service" id="isometriks_json_ld_dumper.registry" />
+
+            <tag name="twig.extension" />
+        </service>
+    </services>
+</container>
